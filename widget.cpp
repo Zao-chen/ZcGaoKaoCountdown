@@ -8,12 +8,20 @@
 #include <QSettings>
 #include <string>
 #include <QDateTime>
+#include <QMessageBox>
+#include  <QDesktopServices>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
+
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::Tool);
+    setAttribute(Qt::WA_TranslucentBackground);
+    resize(1, 1); // 可以将大小设置为最小
+
+    initSysTrayIcon();
 
 
     // 创建一个QImage对象，用于存储图片。
@@ -55,16 +63,11 @@ Widget::Widget(QWidget *parent)
     // 将图片保存到文件
     // 参数分别是：文件路径、图片格式（如果文件扩展名正确，此参数可以省略）
     bool saved = image.save(qApp->applicationDirPath()+"/img.png");
-    if(saved) {
-        qDebug() << "图片保存成功！";
-    } else {
-        qDebug() << "图片保存失败！";
-    }
     //壁纸注册表表
     QSettings wallPaper("HKEY_CURRENT_USER\\Control Panel\\Desktop",
                         QSettings::NativeFormat);
     //新的桌面图片路径
-    QString path(qApp->applicationDirPath()+"/img1.png");
+    QString path(qApp->applicationDirPath()+"/img.png");
     //给壁纸注册表设置新的值（新的图片路径）
     wallPaper.setValue("Wallpaper",path);
     QByteArray byte = path.toLocal8Bit();
@@ -73,7 +76,8 @@ Widget::Widget(QWidget *parent)
 
 
     setMyAppAutoRun(true);
-    qApp->exec();
+
+
 }
 
 Widget::~Widget()
@@ -97,4 +101,98 @@ void Widget::setMyAppAutoRun(bool isStart)
     {
         settings->remove(application_name);		//从注册表中删除
     }
+
+
+}
+
+
+//创建系统托盘
+void Widget::initSysTrayIcon()
+{
+    //隐藏程序主窗口
+    this->hide();
+
+    //新建QSystemTrayIcon对象
+    m_sysTrayIcon = new QSystemTrayIcon(this);
+
+    //设置托盘图标
+    QIcon icon = QIcon(":/img/logo.png");    //资源文件添加的图标
+    m_sysTrayIcon->setIcon(icon);
+
+    //当鼠标移动到托盘上的图标时，会显示此处设置的内容
+    m_sysTrayIcon->setToolTip("托盘提示信息");
+
+    //给QSystemTrayIcon添加槽函数
+    connect(m_sysTrayIcon, &QSystemTrayIcon::activated,
+            [=](QSystemTrayIcon::ActivationReason reason)
+    {
+        switch(reason)
+        {
+        case QSystemTrayIcon::Trigger:
+            //单击托盘图标
+            m_sysTrayIcon->showMessage("早晨的高考倒计时",
+                                              "右键打开菜单",
+                                              QSystemTrayIcon::Information,
+                                              1000);
+            break;
+        case QSystemTrayIcon::DoubleClick:
+            //双击托盘图标
+            //双击后显示主程序窗口
+            this->show();
+            break;
+        default:
+            break;
+        }
+    });
+
+    //建立托盘操作的菜单
+    createActions();
+    createMenu();
+    //在系统托盘显示此对象
+    m_sysTrayIcon->show();
+}
+
+//创建动作
+void Widget::createActions()
+{
+    m_showGithubAction = new QAction("Github", this);
+    connect(m_showGithubAction,SIGNAL(triggered()),this,SLOT(on_showGithubAction()));
+    m_exitAppAction = new QAction("退出", this);
+    connect(m_exitAppAction,SIGNAL(triggered()),this,SLOT(on_exitAppAction()));
+}
+
+//创建托盘菜单
+void Widget::createMenu()
+{
+    m_menu = new QMenu(this);
+    //新增菜单项---显示主界面
+    m_menu->addAction(m_showGithubAction);
+    //增加分隔符
+    m_menu->addSeparator();
+    //新增菜单项---退出程序
+    m_menu->addAction(m_exitAppAction);
+    //把QMenu赋给QSystemTrayIcon对象
+    m_sysTrayIcon->setContextMenu(m_menu);
+}
+
+
+void Widget::on_showGithubAction()
+{
+    QDesktopServices::openUrl(QUrl("https://github.com/Zao-chen/ZcGaoKaoCountdown", QUrl::TolerantMode));
+
+}
+
+//当在系统托盘点击菜单内的退出程序操作
+void Widget::on_exitAppAction()
+{
+    qApp->exit();
+}
+
+//关闭事件
+void Widget::closeEvent(QCloseEvent *event)
+{
+    //忽略窗口关闭事件
+    QApplication::setQuitOnLastWindowClosed( true );
+    this->hide();
+    event->ignore();
 }
