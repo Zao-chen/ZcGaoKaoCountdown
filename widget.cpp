@@ -49,12 +49,6 @@ Widget::Widget(QWidget *parent)
     QVBoxLayout* centerLayout = new QVBoxLayout();
     centerLayout->addWidget(spinBoxArea);
 
-
-
-
-
-
-
     /*初始化托盘*/
     initSysTrayIcon();
 
