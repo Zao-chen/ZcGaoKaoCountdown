@@ -22,8 +22,11 @@ public:
     ~Widget();
 
 private slots:
+    void on_showMainAction();
     void on_showGithubAction();
     void on_exitAppAction();    void createMenu();
+    void hideWindow();
+    void on_pushButton_clicked();
 
 private:
     Ui::Widget *ui;
@@ -33,6 +36,7 @@ private:
 
     QMenu *m_menu;                  //菜单
     QAction *m_showGithubAction;      //动作
+    QAction *m_showMainAction;      //动作
     QAction *m_exitAppAction;       //动作
     void createActions();
 
