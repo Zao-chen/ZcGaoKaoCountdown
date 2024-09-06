@@ -1,5 +1,10 @@
 #include "widget.h"
 #include "ui_widget.h"
+
+
+#include <QHBoxLayout>
+#include <QIcon>
+
 #include <QApplication>
 #include <QPainter>
 #include <QImage>
@@ -12,11 +17,43 @@
 #include <QDesktopServices>
 #include <QTimer>
 
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+
+#include "ElaLineEdit.h"
+#include "ElaScrollPageArea.h"
+#include "ElaText.h"
+
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
+    setWindowTitle("关于..");
+
+    ElaScrollPageArea* spinBoxArea = new ElaScrollPageArea(this);
+    QHBoxLayout* spinBoxLayout = new QHBoxLayout(spinBoxArea);
+
+    _edit_year = new ElaLineEdit(this);
+    spinBoxLayout->addWidget(new ElaText("年", this));
+    spinBoxLayout->addWidget(_edit_year);
+
+    _edit_month = new ElaLineEdit(this);
+    spinBoxLayout->addWidget(new ElaText("月", this));
+    spinBoxLayout->addWidget(_edit_month);
+
+    _edit_day = new ElaLineEdit(this);
+    spinBoxLayout->addWidget(new ElaText("日", this));
+    spinBoxLayout->addWidget(_edit_day);
+
+    QVBoxLayout* centerLayout = new QVBoxLayout();
+    centerLayout->addWidget(spinBoxArea);
+
+
+
+
+
+
 
     /*初始化托盘*/
     initSysTrayIcon();
@@ -53,8 +90,6 @@ Widget::Widget(QWidget *parent)
     /*开机自启*/
     setMyAppAutoRun(true);
 
-    /*隐藏窗口*/
-    QTimer::singleShot(0, this, &Widget::hideWindow);
 }
 Widget::~Widget()
 {
@@ -125,51 +160,41 @@ void Widget::createActions()
     m_exitAppAction = new QAction("退出", this);
     connect(m_exitAppAction,SIGNAL(triggered()),this,SLOT(on_exitAppAction()));
 }
-
-//创建托盘菜单
+/*创建托盘菜单*/
 void Widget::createMenu()
 {
     m_menu = new QMenu(this);
-    //新增菜单项---显示主界面
-    m_menu->addAction(m_showMainAction);
-    //新增菜单项---显示github
-    m_menu->addAction(m_showGithubAction);
-    //增加分隔符
-    m_menu->addSeparator();
-    //新增菜单项---退出程序
-    m_menu->addAction(m_exitAppAction);
-    //把QMenu赋给QSystemTrayIcon对象
-    m_sysTrayIcon->setContextMenu(m_menu);
+    m_menu->addAction(m_showMainAction); //新增菜单项
+    m_menu->addAction(m_showGithubAction); //新增菜单项
+    m_menu->addSeparator(); //增加分隔符
+    m_menu->addAction(m_exitAppAction); //新增菜单项---退出程序
+    m_sysTrayIcon->setContextMenu(m_menu); //把QMenu赋给QSystemTrayIcon对象
 }
 
-
+/*托盘Github*/
 void Widget::on_showGithubAction()
 {
     QDesktopServices::openUrl(QUrl("https://github.com/Zao-chen/ZcGaoKaoCountdown", QUrl::TolerantMode));
 
 }
+/*托盘主界面*/
 void Widget::on_showMainAction()
 {
     this->show();
 
 }
-//当在系统托盘点击菜单内的退出程序操作
+/*托盘推出*/
 void Widget::on_exitAppAction()
 {
     qApp->exit();
 }
 
-//关闭事件
+/*窗口关闭*/
 void Widget::closeEvent(QCloseEvent *event)
 {
     //忽略窗口关闭事件
     QApplication::setQuitOnLastWindowClosed( true );
     this->hide();
     event->ignore();
-}
-
-void Widget::on_pushButton_clicked()
-{
-    this->hide();
 }
 

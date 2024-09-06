@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 11.0.2, 2024-09-06T19:51:41. -->
+<!-- Written by QtCreator 11.0.2, 2024-09-06T20:56:55. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -407,7 +407,6 @@
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">P:/Qt/NewStudy/build-ZcGaoKaoCountdown-Desktop_Qt_6_5_2_MSVC2019_64bit-Debug</value>
    </valuemap>
    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>

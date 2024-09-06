@@ -8,6 +8,8 @@
 #include <QAction>
 #include <QCloseEvent>
 
+class ElaLineEdit;
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
@@ -26,7 +28,6 @@ private slots:
     void on_showGithubAction();
     void on_exitAppAction();    void createMenu();
     void hideWindow();
-    void on_pushButton_clicked();
 
 private:
     Ui::Widget *ui;
@@ -39,6 +40,11 @@ private:
     QAction *m_showMainAction;      //动作
     QAction *m_exitAppAction;       //动作
     void createActions();
+
+
+    ElaLineEdit* _edit_year{nullptr};
+    ElaLineEdit* _edit_month{nullptr};
+    ElaLineEdit* _edit_day{nullptr};
 
 protected:
     void closeEvent (QCloseEvent *event) override;
