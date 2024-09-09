@@ -2,19 +2,21 @@
 #define WIDGET_H
 
 #include <QWidget>
-
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include <QAction>
 #include <QCloseEvent>
 
+#include "ElaWidget.h"
+
 class ElaLineEdit;
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
 
-class Widget : public QWidget
+class Widget : public ElaWidget
 {
     Q_OBJECT
 
@@ -31,20 +33,14 @@ private slots:
 
 private:
     Ui::Widget *ui;
-
     QSystemTrayIcon *m_sysTrayIcon; //系统托盘
     void initSysTrayIcon();
-
     QMenu *m_menu;                  //菜单
     QAction *m_showGithubAction;      //动作
     QAction *m_showMainAction;      //动作
     QAction *m_exitAppAction;       //动作
     void createActions();
 
-
-    ElaLineEdit* _edit_year{nullptr};
-    ElaLineEdit* _edit_month{nullptr};
-    ElaLineEdit* _edit_day{nullptr};
 
 protected:
     void closeEvent (QCloseEvent *event) override;

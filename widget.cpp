@@ -24,30 +24,22 @@
 #include "ElaScrollPageArea.h"
 #include "ElaText.h"
 
+#include "ElaWidget.h"
+
 Widget::Widget(QWidget *parent)
-    : QWidget(parent)
+    : ElaWidget(parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    setWindowTitle("关于..");
+    setWindowTitle("早晨的高考倒计时");
 
-    ElaScrollPageArea* spinBoxArea = new ElaScrollPageArea(this);
-    QHBoxLayout* spinBoxLayout = new QHBoxLayout(spinBoxArea);
-
-    _edit_year = new ElaLineEdit(this);
-    spinBoxLayout->addWidget(new ElaText("年", this));
-    spinBoxLayout->addWidget(_edit_year);
-
-    _edit_month = new ElaLineEdit(this);
-    spinBoxLayout->addWidget(new ElaText("月", this));
-    spinBoxLayout->addWidget(_edit_month);
-
-    _edit_day = new ElaLineEdit(this);
-    spinBoxLayout->addWidget(new ElaText("日", this));
-    spinBoxLayout->addWidget(_edit_day);
-
-    QVBoxLayout* centerLayout = new QVBoxLayout();
-    centerLayout->addWidget(spinBoxArea);
+    ui->pushButton_color->setLightDefaultColor(QColor(78, 162, 236));
+    ui->pushButton_color->setLightDefaultColor(QColor(78, 162, 236));
+    ui->pushButton_color->setLightHoverColor(QColor(78, 162, 236));
+    ui->pushButton_color->setLightPressColor(QColor(78, 162, 236));
+    ui->pushButton_color->setDarkDefaultColor(QColor(78, 162, 236));
+    ui->pushButton_color->setDarkHoverColor(QColor(78, 162, 236));
+    ui->pushButton_color->setDarkPressColor(QColor(78, 162, 236));
 
     /*初始化托盘*/
     initSysTrayIcon();
