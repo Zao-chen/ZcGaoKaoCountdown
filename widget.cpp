@@ -115,9 +115,9 @@ void Widget::printText()
 {
     /*绘制图片*/
     QImage image(1920, 1080, QImage::Format_ARGB32); //创建一个QImage对象，用于存储图片。
-    image.fill(QColor(78, 162, 236)); //填充图片背景
+    image.fill(QColor(67, 142, 207)); //填充图片背景
     QPainter painter(&image); //创建一个QPainter对象，用于在image上绘制
-    painter.setPen(Qt::black); //设置画笔颜色
+    painter.setPen(Qt::white); //设置画笔颜色
     QFont font = painter.font(); //设置字体
 
     /*时间差计算*/
@@ -133,15 +133,18 @@ void Widget::printText()
     /*绘制文字*/
     font.setPointSize(30);
     painter.setFont(font); //在图片上绘制文本
-    painter.drawText(QRectF(0, 0, 2800, 500), Qt::AlignCenter, "距离高考还有");
+    painter.drawText(QRectF(-10, -50, 2800, 500), Qt::AlignCenter, "距离高考还有");
     font.setPointSize(60);
     painter.setFont(font); //在图片上绘制文本
-    painter.drawText(QRectF(200, 0, 2800, 500), Qt::AlignCenter, QString::number(daysDiff));
+    painter.drawText(QRectF(188, -60, 2800, 500), Qt::AlignCenter, QString::number(daysDiff));
     font.setPointSize(30);
     painter.setFont(font); //在图片上绘制文本
-    painter.drawText(QRectF(300, 0, 2800, 500), Qt::AlignCenter, "天");
+    painter.drawText(QRectF(290, -50, 2800, 500), Qt::AlignCenter, "天");
 
+    font.setPointSize(15);
     painter.setFont(font); //在图片上绘制文本
+    painter.drawText(QRectF(190, 0, 2800, 500), Qt::AlignCenter, QDateTime::currentDateTime().toString("yyyy年MM月dd日 dddd"));
+
     painter.end(); //绘制完成后，释放QPainter对象
 
     image.save(qApp->applicationDirPath()+"/img.png"); //保存图片
