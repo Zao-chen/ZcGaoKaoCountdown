@@ -31,6 +31,8 @@ private slots:
     void on_exitAppAction();    void createMenu();
     void hideWindow();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::Widget *ui;
     QSystemTrayIcon *m_sysTrayIcon; //系统托盘

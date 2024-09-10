@@ -4,7 +4,7 @@
 
 #include <QHBoxLayout>
 #include <QIcon>
-
+#include <QSettings>
 #include <QApplication>
 #include <QPainter>
 #include <QImage>
@@ -20,10 +20,6 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-#include "ElaLineEdit.h"
-#include "ElaScrollPageArea.h"
-#include "ElaText.h"
-
 #include "ElaWidget.h"
 
 Widget::Widget(QWidget *parent)
@@ -32,6 +28,7 @@ Widget::Widget(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("早晨的高考倒计时");
+    setWindowIcon(QIcon(":/img/logo.png"));
 
     ui->pushButton_color->setLightDefaultColor(QColor(78, 162, 236));
     ui->pushButton_color->setLightDefaultColor(QColor(78, 162, 236));
@@ -50,8 +47,6 @@ Widget::Widget(QWidget *parent)
     QPainter painter(&image); //创建一个QPainter对象，用于在image上绘制
     painter.setPen(Qt::black); //设置画笔颜色
     QFont font = painter.font(); //设置字体
-    font.setPointSize(50);
-    painter.setFont(font); //在图片上绘制文本
 
     /*时间差计算*/
     QDateTime now = QDateTime::currentDateTime(); //获取当前日期和时间
@@ -61,7 +56,17 @@ Widget::Widget(QWidget *parent)
     daysDiff = now.daysTo(targetDateTime);
 
     /*绘制文字*/
-    painter.drawText(QRectF(0, 0, 2800, 500), Qt::AlignCenter, "距离高考还有"+QString::number(daysDiff)+"天");
+    font.setPointSize(30);
+    painter.setFont(font); //在图片上绘制文本
+    painter.drawText(QRectF(0, 0, 2800, 500), Qt::AlignCenter, "距离高考还有");
+    font.setPointSize(60);
+    painter.setFont(font); //在图片上绘制文本
+    painter.drawText(QRectF(200, 0, 2800, 500), Qt::AlignCenter, QString::number(daysDiff));
+    font.setPointSize(30);
+    painter.setFont(font); //在图片上绘制文本
+    painter.drawText(QRectF(300, 0, 2800, 500), Qt::AlignCenter, "天");
+
+    painter.setFont(font); //在图片上绘制文本
     painter.end(); //绘制完成后，释放QPainter对象
 
     /*设置壁纸*/
@@ -182,5 +187,24 @@ void Widget::closeEvent(QCloseEvent *event)
     QApplication::setQuitOnLastWindowClosed( true );
     this->hide();
     event->ignore();
+}
+
+
+void Widget::on_pushButton_clicked()
+{
+    QSettings *settings = new QSettings("Setting.ini",QSettings::IniFormat);
+    //ini配置文件默认不支持直接读写中文，需要手动设置下编码格式才行
+    //configIni->setIniCodec("utf-8");//添上这句就不会中文出现乱码了
+    //强烈建议统一用utf-8编码，包括代码文件。
+    // 写入第一组数据
+    settings->beginGroup("GlobelSetting");
+    settings->setValue("time_year",2025);
+    settings->setValue("time_month",6);
+    settings->setValue("time_day",7);
+    settings->endGroup();
+    delete settings;
+    settings =nullptr;
+
+    this->hide();
 }
 
