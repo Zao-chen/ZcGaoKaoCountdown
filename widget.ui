@@ -28,7 +28,7 @@
         <number>20</number>
        </property>
        <item row="1" column="3">
-        <widget class="ElaLineEdit" name="lineEdit_2">
+        <widget class="ElaLineEdit" name="lineEdit_month">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -55,6 +55,9 @@
        </item>
        <item row="2" column="2">
         <widget class="ElaCheckBox" name="checkBox">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -110,7 +113,7 @@
         </widget>
        </item>
        <item row="1" column="2">
-        <widget class="ElaLineEdit" name="lineEdit">
+        <widget class="ElaLineEdit" name="lineEdit_year">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -154,7 +157,7 @@
         </widget>
        </item>
        <item row="1" column="4">
-        <widget class="ElaLineEdit" name="lineEdit_3">
+        <widget class="ElaLineEdit" name="lineEdit_day">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -214,6 +217,9 @@
        </item>
        <item row="5" column="2">
         <widget class="ElaPushButton" name="pushButton_color">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string/>
          </property>

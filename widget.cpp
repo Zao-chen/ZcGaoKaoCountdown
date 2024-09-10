@@ -21,6 +21,7 @@
 #include <QVBoxLayout>
 
 #include "ElaWidget.h"
+#include "ElaMessageBar.h"
 
 Widget::Widget(QWidget *parent)
     : ElaWidget(parent)
@@ -30,6 +31,7 @@ Widget::Widget(QWidget *parent)
     setWindowTitle("早晨的高考倒计时");
     setWindowIcon(QIcon(":/img/logo.png"));
 
+    /*初始化*/
     ui->pushButton_color->setLightDefaultColor(QColor(78, 162, 236));
     ui->pushButton_color->setLightDefaultColor(QColor(78, 162, 236));
     ui->pushButton_color->setLightHoverColor(QColor(78, 162, 236));
@@ -38,49 +40,17 @@ Widget::Widget(QWidget *parent)
     ui->pushButton_color->setDarkHoverColor(QColor(78, 162, 236));
     ui->pushButton_color->setDarkPressColor(QColor(78, 162, 236));
 
+    QSettings *settings = new QSettings("Setting.ini",QSettings::IniFormat);
+    ui->lineEdit_year->setText(settings->value("GlobelSetting/time_year").toString());
+    ui->lineEdit_month->setText(settings->value("GlobelSetting/time_month").toString());
+    ui->lineEdit_day->setText(settings->value("GlobelSetting/time_day").toString());
+
     /*初始化托盘*/
     initSysTrayIcon();
-
-    /*绘制图片*/
-    QImage image(1920, 1080, QImage::Format_ARGB32); //创建一个QImage对象，用于存储图片。
-    image.fill(QColor(78, 162, 236)); //填充图片背景
-    QPainter painter(&image); //创建一个QPainter对象，用于在image上绘制
-    painter.setPen(Qt::black); //设置画笔颜色
-    QFont font = painter.font(); //设置字体
-
-    /*时间差计算*/
-    QDateTime now = QDateTime::currentDateTime(); //获取当前日期和时间
-    QDate targetDate(2025, 6, 7); //设置目标日期（2025年6月7日）
-    QDateTime targetDateTime(targetDate, QTime(0, 0, 0)); //创建一个目标日期时间对象，时间部分设为0时0分0秒
-    qint64 daysDiff = targetDateTime.daysTo(now); // 计算两个日期之间的天数差
-    daysDiff = now.daysTo(targetDateTime);
-
-    /*绘制文字*/
-    font.setPointSize(30);
-    painter.setFont(font); //在图片上绘制文本
-    painter.drawText(QRectF(0, 0, 2800, 500), Qt::AlignCenter, "距离高考还有");
-    font.setPointSize(60);
-    painter.setFont(font); //在图片上绘制文本
-    painter.drawText(QRectF(200, 0, 2800, 500), Qt::AlignCenter, QString::number(daysDiff));
-    font.setPointSize(30);
-    painter.setFont(font); //在图片上绘制文本
-    painter.drawText(QRectF(300, 0, 2800, 500), Qt::AlignCenter, "天");
-
-    painter.setFont(font); //在图片上绘制文本
-    painter.end(); //绘制完成后，释放QPainter对象
-
-    /*设置壁纸*/
-    image.save(qApp->applicationDirPath()+"/img.png"); //保存图片
-    QSettings wallPaper("HKEY_CURRENT_USER\\Control Panel\\Desktop",
-                        QSettings::NativeFormat); //壁纸注册表表
-    QString path(qApp->applicationDirPath()+"/img.png"); //设置壁纸
-    wallPaper.setValue("Wallpaper",path); //给壁纸注册表设置新的值（新的图片路径）
-    QByteArray byte = path.toLocal8Bit();
-    SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, byte.data(), SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE); //调用windowsAPI
-
+    /*绘制图片并设置壁纸*/
+    printText();
     /*开机自启*/
     setMyAppAutoRun(true);
-
 }
 Widget::~Widget()
 {
@@ -141,6 +111,49 @@ void Widget::initSysTrayIcon()
     m_sysTrayIcon->show(); //在系统托盘显示此对象
 }
 
+void Widget::printText()
+{
+    /*绘制图片*/
+    QImage image(1920, 1080, QImage::Format_ARGB32); //创建一个QImage对象，用于存储图片。
+    image.fill(QColor(78, 162, 236)); //填充图片背景
+    QPainter painter(&image); //创建一个QPainter对象，用于在image上绘制
+    painter.setPen(Qt::black); //设置画笔颜色
+    QFont font = painter.font(); //设置字体
+
+    /*时间差计算*/
+    QDateTime now = QDateTime::currentDateTime(); //获取当前日期和时间
+
+    QSettings *settings = new QSettings("Setting.ini",QSettings::IniFormat);
+    QDate targetDate(settings->value("GlobelSetting/time_year").toInt(),settings->value("GlobelSetting/time_month").toInt(), settings->value("GlobelSetting/time_day").toInt()); //设置目标日期（2025年6月7日）
+
+    QDateTime targetDateTime(targetDate, QTime(0, 0, 0)); //创建一个目标日期时间对象，时间部分设为0时0分0秒
+    qint64 daysDiff = targetDateTime.daysTo(now); // 计算两个日期之间的天数差
+    daysDiff = now.daysTo(targetDateTime);
+
+    /*绘制文字*/
+    font.setPointSize(30);
+    painter.setFont(font); //在图片上绘制文本
+    painter.drawText(QRectF(0, 0, 2800, 500), Qt::AlignCenter, "距离高考还有");
+    font.setPointSize(60);
+    painter.setFont(font); //在图片上绘制文本
+    painter.drawText(QRectF(200, 0, 2800, 500), Qt::AlignCenter, QString::number(daysDiff));
+    font.setPointSize(30);
+    painter.setFont(font); //在图片上绘制文本
+    painter.drawText(QRectF(300, 0, 2800, 500), Qt::AlignCenter, "天");
+
+    painter.setFont(font); //在图片上绘制文本
+    painter.end(); //绘制完成后，释放QPainter对象
+
+    image.save(qApp->applicationDirPath()+"/img.png"); //保存图片
+
+    QSettings wallPaper("HKEY_CURRENT_USER\\Control Panel\\Desktop",
+                        QSettings::NativeFormat); //壁纸注册表表
+    QString path(qApp->applicationDirPath()+"/img.png"); //设置壁纸
+    wallPaper.setValue("Wallpaper",path); //给壁纸注册表设置新的值（新的图片路径）
+    QByteArray byte = path.toLocal8Bit();
+    SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, byte.data(), SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE); //调用windowsAPI
+}
+
 /*托盘动作*/
 void Widget::createActions()
 {
@@ -198,13 +211,22 @@ void Widget::on_pushButton_clicked()
     //强烈建议统一用utf-8编码，包括代码文件。
     // 写入第一组数据
     settings->beginGroup("GlobelSetting");
-    settings->setValue("time_year",2025);
-    settings->setValue("time_month",6);
-    settings->setValue("time_day",7);
+
+    settings->setValue("time_year",ui->lineEdit_year->text());
+    settings->setValue("time_month",ui->lineEdit_month->text());
+    settings->setValue("time_day",ui->lineEdit_day->text());
     settings->endGroup();
     delete settings;
     settings =nullptr;
 
+    printText();
+
+    ElaMessageBar::success(ElaMessageBarType::TopRight, "保存成功", "配置文件已保存并刷新", 1000, this);
+}
+
+
+void Widget::on_pushButton_2_clicked()
+{
     this->hide();
 }
 

@@ -33,10 +33,13 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_pushButton_2_clicked();
+
 private:
     Ui::Widget *ui;
     QSystemTrayIcon *m_sysTrayIcon; //系统托盘
     void initSysTrayIcon();
+    void printText();
     QMenu *m_menu;                  //菜单
     QAction *m_showGithubAction;      //动作
     QAction *m_showMainAction;      //动作
