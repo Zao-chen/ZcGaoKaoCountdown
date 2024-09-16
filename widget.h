@@ -6,6 +6,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QCloseEvent>
+#include <QNetworkAccessManager>
 
 #include "ElaWidget.h"
 
@@ -45,7 +46,7 @@ private:
     QAction *m_showMainAction;      //动作
     QAction *m_exitAppAction;       //动作
     void createActions();
-
+    QNetworkAccessManager *m_manager;
 
 protected:
     void closeEvent (QCloseEvent *event) override;

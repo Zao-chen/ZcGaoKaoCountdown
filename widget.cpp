@@ -16,7 +16,10 @@
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QTimer>
-
+#include <QDir>
+#include <QUrl>
+#include <QNetworkReply>
+#include <QNetworkAccessManager>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
@@ -30,6 +33,8 @@ Widget::Widget(QWidget *parent)
     ui->setupUi(this);
     setWindowTitle("早晨的高考倒计时");
     setWindowIcon(QIcon(":/img/logo.png"));
+
+    QDir::setCurrent(QCoreApplication::applicationDirPath());
 
     /*初始化*/
     ui->pushButton_color->setLightDefaultColor(QColor(78, 162, 236));
@@ -130,7 +135,7 @@ void Widget::printText()
     qint64 daysDiff = targetDateTime.daysTo(now); // 计算两个日期之间的天数差
     daysDiff = now.daysTo(targetDateTime);
 
-    /*绘制文字*/
+    /*绘制计时文字*/
     font.setPointSize(30);
     painter.setFont(font); //在图片上绘制文本
     painter.drawText(QRectF(-10, -50, 2800, 500), Qt::AlignCenter, "距离高考还有");
@@ -141,14 +146,22 @@ void Widget::printText()
     painter.setFont(font); //在图片上绘制文本
     painter.drawText(QRectF(290, -50, 2800, 500), Qt::AlignCenter, "天");
 
-    font.setPointSize(15);
+    /*绘制吐槽文字*/
+    m_manager = new QNetworkAccessManager(this);//新建QNetworkAccessManager对象
+    QString read;
+
+    QEventLoop loop;
+    QNetworkReply *reply = m_manager->get(QNetworkRequest(QUrl("https://www.yuzhida.top/zaochen/test/temp")));
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+    loop.exec();
+
+    read = reply->readAll();
+    reply->deleteLater();       //记得释放内存
+    font.setPointSize(10);
     painter.setFont(font); //在图片上绘制文本
-    painter.drawText(QRectF(190, 0, 2800, 500), Qt::AlignCenter, QDateTime::currentDateTime().toString("yyyy年MM月dd日 dddd"));
-
+    painter.drawText(QRectF(190, 0, 2800, 510), Qt::AlignCenter, read);
     painter.end(); //绘制完成后，释放QPainter对象
-
     image.save(qApp->applicationDirPath()+"/img.png"); //保存图片
-
     QSettings wallPaper("HKEY_CURRENT_USER\\Control Panel\\Desktop",
                         QSettings::NativeFormat); //壁纸注册表表
     QString path(qApp->applicationDirPath()+"/img.png"); //设置壁纸
@@ -156,7 +169,6 @@ void Widget::printText()
     QByteArray byte = path.toLocal8Bit();
     SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, byte.data(), SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE); //调用windowsAPI
 }
-
 /*托盘动作*/
 void Widget::createActions()
 {

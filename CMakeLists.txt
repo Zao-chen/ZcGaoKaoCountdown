@@ -46,6 +46,10 @@ else()
     endif()
 endif()
 
+find_package(Qt6 COMPONENTS Network REQUIRED)
+target_link_libraries(ZcGaoKaoCountdown PRIVATE Qt6::Network)
+
+
 include_directories(
     include
 )

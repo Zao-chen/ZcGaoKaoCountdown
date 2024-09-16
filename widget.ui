@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>802</width>
-    <height>586</height>
+    <width>900</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -251,7 +251,7 @@
        <item>
         <widget class="ElaPushButton" name="pushButton_2">
          <property name="text">
-          <string>取消</string>
+          <string>关闭</string>
          </property>
         </widget>
        </item>
@@ -265,6 +265,21 @@
       </layout>
      </item>
     </layout>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <pointsize>5</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>v0.0.3 made by Zao_chen with &lt;3 and bug</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
