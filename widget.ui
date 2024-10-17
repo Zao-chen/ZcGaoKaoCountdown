@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>900</width>
-    <height>600</height>
+    <width>950</width>
+    <height>614</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,15 +20,28 @@
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0,0,0,0">
+      <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0,0,0,0,0">
        <property name="horizontalSpacing">
         <number>15</number>
        </property>
        <property name="verticalSpacing">
         <number>20</number>
        </property>
-       <item row="1" column="3">
-        <widget class="ElaLineEdit" name="lineEdit_month">
+       <item row="6" column="2">
+        <widget class="ElaPushButton" name="pushButton_color">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="4">
+        <widget class="ElaLineEdit" name="lineEdit_5">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -36,52 +49,14 @@
           </size>
          </property>
          <property name="text">
-          <string>6</string>
+          <string>天</string>
          </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="ElaText" name="label_time">
-         <property name="font">
-          <font>
-           <pointsize>14</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>基础设置</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="ElaCheckBox" name="checkBox">
-         <property name="enabled">
+         <property name="clearButtonEnabled">
           <bool>false</bool>
          </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="ElaText" name="label_time_year">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>高考时间</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="2">
+       <item row="5" column="2">
         <widget class="ElaLineEdit" name="lineEdit_4">
          <property name="enabled">
           <bool>false</bool>
@@ -100,18 +75,87 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="3">
-        <widget class="ElaText" name="label_time_year_4">
+       <item row="1" column="1">
+        <widget class="ElaText" name="label_time_year">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
           </font>
          </property>
          <property name="text">
-          <string>xxx</string>
+          <string>主计时时间</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignCenter</set>
+          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="ElaLineEdit" name="lineEdit_month">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>6</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="ElaText" name="label_time_year_5">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>壁纸颜色</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="4">
+        <widget class="ElaLineEdit" name="lineEdit_day">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>7</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="ElaText" name="label_time">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>基础设置</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="ElaText" name="label_time_year_2">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>开机自启</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
         </widget>
        </item>
@@ -131,7 +175,35 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="5" column="3">
+        <widget class="ElaText" name="label_time_year_4">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>xxx</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="2">
+        <widget class="ElaCheckBox" name="checkBox">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
         <widget class="ElaText" name="label_time_year_3">
          <property name="font">
           <font>
@@ -142,11 +214,11 @@
           <string>壁纸标语</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
+       <item row="4" column="1">
         <widget class="ElaText" name="label_time_2">
          <property name="font">
           <font>
@@ -159,39 +231,20 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="4">
-        <widget class="ElaLineEdit" name="lineEdit_day">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>7</string>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="1">
-        <widget class="ElaText" name="label_time_year_2">
+        <widget class="QLabel" name="label_2">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
           </font>
          </property>
          <property name="text">
-          <string>开机自启</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          <string>次计时时间</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="4">
-        <widget class="ElaLineEdit" name="lineEdit_5">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
+       <item row="2" column="2">
+        <widget class="ElaLineEdit" name="lineEdit_subyear">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -199,35 +252,33 @@
           </size>
          </property>
          <property name="text">
-          <string>天</string>
-         </property>
-         <property name="clearButtonEnabled">
-          <bool>false</bool>
+          <string>2025</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
-        <widget class="ElaText" name="label_time_year_5">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
+       <item row="2" column="3">
+        <widget class="ElaLineEdit" name="lineEdit_submonth">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
          </property>
          <property name="text">
-          <string>壁纸颜色</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          <string>1</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="2">
-        <widget class="ElaPushButton" name="pushButton_color">
-         <property name="enabled">
-          <bool>false</bool>
+       <item row="2" column="4">
+        <widget class="ElaLineEdit" name="lineEdit_subday">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
          </property>
          <property name="text">
-          <string/>
+          <string>10</string>
          </property>
         </widget>
        </item>
@@ -236,7 +287,7 @@
      <item>
       <spacer name="verticalSpacer">
        <property name="orientation">
-        <enum>Qt::Vertical</enum>
+        <enum>Qt::Orientation::Vertical</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -277,13 +328,18 @@
       <string>v0.0.3 made by Zao_chen with &lt;3 and bug</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>ElaPushButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">elapushbutton.h</header>
+  </customwidget>
   <customwidget>
    <class>ElaLineEdit</class>
    <extends>QLineEdit</extends>
@@ -293,11 +349,6 @@
    <class>ElaText</class>
    <extends>QLabel</extends>
    <header location="global">elatext.h</header>
-  </customwidget>
-  <customwidget>
-   <class>ElaPushButton</class>
-   <extends>QPushButton</extends>
-   <header location="global">elapushbutton.h</header>
   </customwidget>
   <customwidget>
    <class>ElaCheckBox</class>

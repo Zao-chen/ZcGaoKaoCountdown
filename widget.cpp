@@ -11,17 +11,16 @@
 #include <QBuffer>
 #include <windows.h>
 #include <QSettings>
-#include <string>
 #include <QDateTime>
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QTimer>
-#include <QDir>
 #include <QUrl>
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QFileDialog>
 
 #include "ElaWidget.h"
 #include "ElaMessageBar.h"
@@ -34,7 +33,6 @@ Widget::Widget(QWidget *parent)
     setWindowTitle("早晨的高考倒计时");
     setWindowIcon(QIcon(":/img/logo.png"));
 
-    QDir::setCurrent(QCoreApplication::applicationDirPath());
 
     /*初始化*/
     ui->pushButton_color->setLightDefaultColor(QColor(78, 162, 236));
@@ -49,6 +47,9 @@ Widget::Widget(QWidget *parent)
     ui->lineEdit_year->setText(settings->value("GlobelSetting/time_year").toString());
     ui->lineEdit_month->setText(settings->value("GlobelSetting/time_month").toString());
     ui->lineEdit_day->setText(settings->value("GlobelSetting/time_day").toString());
+    ui->lineEdit_subyear->setText(settings->value("GlobelSetting/time_subyear").toString());
+    ui->lineEdit_submonth->setText(settings->value("GlobelSetting/time_submonth").toString());
+    ui->lineEdit_subday->setText(settings->value("GlobelSetting/time_subday").toString());
 
     /*初始化托盘*/
     initSysTrayIcon();
@@ -56,6 +57,13 @@ Widget::Widget(QWidget *parent)
     printText();
     /*开机自启*/
     setMyAppAutoRun(true);
+
+
+    fTimer = new QTimer(this);
+    fTimer->stop();
+    fTimer->setInterval(600000);//设置定时周期，单位：ms
+    connect(fTimer,SIGNAL(timeout()),this,SLOT(on_timer_timeout()));
+    fTimer->start();//定时器开始工作
 }
 Widget::~Widget()
 {
@@ -127,39 +135,86 @@ void Widget::printText()
 
     /*时间差计算*/
     QDateTime now = QDateTime::currentDateTime(); //获取当前日期和时间
-
     QSettings *settings = new QSettings("Setting.ini",QSettings::IniFormat);
-    QDate targetDate(settings->value("GlobelSetting/time_year").toInt(),settings->value("GlobelSetting/time_month").toInt(), settings->value("GlobelSetting/time_day").toInt()); //设置目标日期（2025年6月7日）
-
+    QDate targetDate(settings->value("GlobelSetting/time_year").toInt(),settings->value("GlobelSetting/time_month").toInt(), settings->value("GlobelSetting/time_day").toInt());
     QDateTime targetDateTime(targetDate, QTime(0, 0, 0)); //创建一个目标日期时间对象，时间部分设为0时0分0秒
     qint64 daysDiff = targetDateTime.daysTo(now); // 计算两个日期之间的天数差
     daysDiff = now.daysTo(targetDateTime);
-
     /*绘制计时文字*/
-    font.setPointSize(30);
+    font.setPointSize(35);
     painter.setFont(font); //在图片上绘制文本
-    painter.drawText(QRectF(-10, -50, 2800, 500), Qt::AlignCenter, "距离高考还有");
-    font.setPointSize(60);
+    painter.drawText(QRectF(0, -50, 2800, 500), Qt::AlignCenter, "距离高考还有");
+    font.setPointSize(63);
     painter.setFont(font); //在图片上绘制文本
-    painter.drawText(QRectF(188, -60, 2800, 500), Qt::AlignCenter, QString::number(daysDiff));
-    font.setPointSize(30);
+    painter.drawText(QRectF(215, -60, 2800, 500), Qt::AlignCenter, QString::number(daysDiff));
+    font.setPointSize(35);
     painter.setFont(font); //在图片上绘制文本
-    painter.drawText(QRectF(290, -50, 2800, 500), Qt::AlignCenter, "天");
+    painter.drawText(QRectF(315, -50, 2800, 500), Qt::AlignCenter, "天");
 
-    /*绘制吐槽文字*/
-    m_manager = new QNetworkAccessManager(this);//新建QNetworkAccessManager对象
-    QString read;
-
-    QEventLoop loop;
-    QNetworkReply *reply = m_manager->get(QNetworkRequest(QUrl("https://www.yuzhida.top/zaochen/test/temp")));
-    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-    loop.exec();
-
-    read = reply->readAll();
-    reply->deleteLater();       //记得释放内存
-    font.setPointSize(10);
+    /*时间差计算*/
+    now = QDateTime::currentDateTime(); //获取当前日期和时间
+    QDate targetDate2(settings->value("GlobelSetting/subtime_year").toInt(),settings->value("GlobelSetting/subtime_month").toInt(), settings->value("GlobelSetting/subtime_day").toInt());
+    QDateTime targetDateTime2(targetDate2, QTime(0, 0, 0)); //创建一个目标日期时间对象，时间部分设为0时0分0秒
+    daysDiff = targetDateTime2.daysTo(now); // 计算两个日期之间的天数差
+    daysDiff = now.daysTo(targetDateTime2);
+    /*绘制计时文字*/
+    font.setPointSize(35);
     painter.setFont(font); //在图片上绘制文本
-    painter.drawText(QRectF(190, 0, 2800, 510), Qt::AlignCenter, read);
+    painter.drawText(QRectF(0, 50, 2800, 500), Qt::AlignCenter, "距离春考还有");
+    font.setPointSize(63);
+    painter.setFont(font); //在图片上绘制文本
+    painter.drawText(QRectF(215, 40, 2800, 500), Qt::AlignCenter, QString::number(daysDiff));
+    font.setPointSize(35);
+    painter.setFont(font); //在图片上绘制文本
+    painter.drawText(QRectF(315, 50, 2800, 500), Qt::AlignCenter, "天");
+
+    /*绘制值日生表*/
+    font.setPointSize(23);
+    painter.setFont(font); //在图片上绘制文本
+    painter.drawText(QRectF(1050, 400+150, 700, 500), Qt::AlignRight, "今日帕鲁:");
+    QDate currentDate = QDate::currentDate();
+    int dayOfWeek = currentDate.dayOfWeek()-1;
+
+    struct palu_list {
+        QStringList get_food ;
+        QStringList work;
+    };
+    palu_list _palu_list;
+
+    _palu_list.get_food = settings->value("GlobelSetting/day1").toStringList();
+    _palu_list.work = settings->value("GlobelSetting/day2").toStringList();
+
+    font.setPointSize(19);
+    painter.setFont(font); //在图片上绘制文本
+    painter.drawText(QRectF(1050, 450+150, 700, 500), Qt::AlignRight, "拿饭："+_palu_list.get_food[dayOfWeek]);
+    painter.drawText(QRectF(1050, 485+150, 700, 500), Qt::AlignRight, "值日："+_palu_list.work[dayOfWeek]);
+    qDebug()<<"ok1";
+    /*获取图片*/
+    QNetworkAccessManager *m_manager = new QNetworkAccessManager(this);
+    QEventLoop loop1;
+
+    QNetworkReply *reply1 = m_manager->get(QNetworkRequest(QUrl("https://zaochenpan.oss-cn-shanghai.aliyuncs.com/sewoo.png")));
+    connect(reply1, &QNetworkReply::finished, &loop1, &QEventLoop::quit);
+
+    loop1.exec();
+
+    if (reply1->error() == QNetworkReply::NoError) {
+        QByteArray bytes = reply1->readAll();
+        QImage img;
+        if (img.loadFromData(bytes)) {
+            qDebug() << "Image loaded successfully";
+            // 假设这里有一个有效的QPainter对象painter
+            painter.drawImage(0, 0, img);
+        } else {
+            qDebug() << "Failed to load image from data";
+        }
+    } else {
+        qDebug() << "Network error:" << reply1->errorString();
+    }
+
+    reply1->deleteLater();
+
+    /*绘制完毕*/
     painter.end(); //绘制完成后，释放QPainter对象
     image.save(qApp->applicationDirPath()+"/img.png"); //保存图片
     QSettings wallPaper("HKEY_CURRENT_USER\\Control Panel\\Desktop",
@@ -206,6 +261,16 @@ void Widget::on_showMainAction()
 void Widget::on_exitAppAction()
 {
     qApp->exit();
+    /*绘制图片*/
+    QImage image(1920, 1080, QImage::Format_ARGB32); //创建一个QImage对象，用于存储图片。
+    image.fill(QColor(67, 142, 207)); //填充图片背景
+    image.save(qApp->applicationDirPath()+"/img.png"); //保存图片
+    QSettings wallPaper("HKEY_CURRENT_USER\\Control Panel\\Desktop",
+                        QSettings::NativeFormat); //壁纸注册表表
+    QString path(qApp->applicationDirPath()+"/img.png"); //设置壁纸
+    wallPaper.setValue("Wallpaper",path); //给壁纸注册表设置新的值（新的图片路径）
+    QByteArray byte = path.toLocal8Bit();
+    SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, byte.data(), SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE); //调用windowsAPI
 }
 
 /*窗口关闭*/
@@ -226,10 +291,12 @@ void Widget::on_pushButton_clicked()
     //强烈建议统一用utf-8编码，包括代码文件。
     // 写入第一组数据
     settings->beginGroup("GlobelSetting");
-
     settings->setValue("time_year",ui->lineEdit_year->text());
     settings->setValue("time_month",ui->lineEdit_month->text());
-    settings->setValue("time_day",ui->lineEdit_day->text());
+    settings->setValue("time_day",ui->lineEdit_subday->text());
+    settings->setValue("subtime_year",ui->lineEdit_subyear->text());
+    settings->setValue("subtime_month",ui->lineEdit_submonth->text());
+    settings->setValue("subtime_day",ui->lineEdit_subday->text());
     settings->endGroup();
     delete settings;
     settings =nullptr;
@@ -244,4 +311,7 @@ void Widget::on_pushButton_2_clicked()
 {
     this->hide();
 }
-
+void Widget::on_timer_timeout(){
+    //定时器中断响
+    printText();
+}

@@ -36,6 +36,7 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+    void on_timer_timeout(); //定时中断处理的槽函数
 private:
     Ui::Widget *ui;
     QSystemTrayIcon *m_sysTrayIcon; //系统托盘
@@ -47,6 +48,8 @@ private:
     QAction *m_exitAppAction;       //动作
     void createActions();
     QNetworkAccessManager *m_manager;
+    QTimer * fTimer; //定时器
+    QTime fTimeCounter;//计时器
 
 protected:
     void closeEvent (QCloseEvent *event) override;
