@@ -3,7 +3,7 @@
     "windows": {
       "open-url": "",
       "latest-version": "1.0",
-      "download-url": "https://github.com/Zao-chen/ZcGaoKaoCountdown/releases/download/latest/ZcGaoKaoCountdown.exe",
+      "download-url": "https://github.com/Zao-chen/ZcGaoKaoCountdown/releases/latest/download/ZcGaoKaoCountdown.exe",
       "changelog": "Test",
       "mandatory": true
     }
