@@ -3,7 +3,7 @@
     "windows": {
       "open-url": "",
       "latest-version": "1.0",
-      "download-url": "https://raw.githubusercontent.com/alex-spataru/QSimpleUpdater/master/tutorial/download/YesItWorks.jpg",
+      "download-url": "https://github.com/Zao-chen/ZcGaoKaoCountdown/releases/download/latest/ZcGaoKaoCountdown.exe",
       "changelog": "This is an example changelog for Windows. Go on...",
       "mandatory": true
     }
