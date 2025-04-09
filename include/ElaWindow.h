@@ -4,29 +4,32 @@
 #include <QMainWindow>
 
 #include "Def.h"
+#include "ElaAppBar.h"
 #include "stdafx.h"
 class ElaWindowPrivate;
-class QStackedWidget;
 class ELA_EXPORT ElaWindow : public QMainWindow
 {
     Q_OBJECT
     Q_Q_CREATE(ElaWindow)
+    Q_PROPERTY_CREATE_Q_H(bool, IsStayTop)
+    Q_PROPERTY_CREATE_Q_H(bool, IsFixedSize)
+    Q_PROPERTY_CREATE_Q_H(bool, IsDefaultClosed)
+    Q_PROPERTY_CREATE_Q_H(int, AppBarHeight)
+    Q_PROPERTY_CREATE_Q_H(int, CustomWidgetMaximumWidth)
     Q_PROPERTY_CREATE_Q_H(int, ThemeChangeTime)
-    Q_PROPERTY_CREATE_Q_H(bool, IsEnableMica)
-    Q_PROPERTY_CREATE_Q_H(QString, MicaImagePath)
+    Q_PROPERTY_CREATE_Q_H(bool, IsCentralStackedWidgetTransparent)
     Q_PROPERTY_CREATE_Q_H(ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
+    Q_TAKEOVER_NATIVEEVENT_H
 public:
     explicit ElaWindow(QWidget* parent = nullptr);
     ~ElaWindow();
 
     void moveToCenter();
 
+    void setCustomWidget(ElaAppBarType::CustomArea customArea, QWidget* customWidget);
+    QWidget* getCustomWidget() const;
     void setIsNavigationBarEnable(bool isEnable);
     bool getIsNavigationBarEnable() const;
-    void setIsStayTop(bool isStayTop);
-    bool getIsStayTop() const;
-    void setIsFixedSize(bool isFixedSize);
-    bool getIsFixedSize() const;
     void setUserInfoCardVisible(bool isVisible);
     void setUserInfoCardPixmap(QPixmap pix);
     void setUserInfoCardTitle(QString title);
@@ -48,26 +51,14 @@ public:
     void setWindowButtonFlags(ElaAppBarType::ButtonFlags buttonFlags);
     ElaAppBarType::ButtonFlags getWindowButtonFlags() const;
 
-    void setCustomWidget(QWidget* widget);
-    QWidget* getCustomWidget() const;
-
-    void setAppBarHeight(int appBarHeight);
-    int getAppBarHeight() const;
-
-    void setCustomWidgetMaximumWidth(int width);
-    int getCustomWidgetMaximumWidth() const;
-
-    void setIsDefaultClosed(bool isDefaultClosed);
-    bool getIsDefaultClosed() const;
     void closeWindow();
 Q_SIGNALS:
     Q_SIGNAL void userInfoCardClicked();
     Q_SIGNAL void closeButtonClicked();
     Q_SIGNAL void navigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
+    Q_SIGNAL void customWidgetChanged();
 
 protected:
-    virtual void moveEvent(QMoveEvent* event) override;
-    virtual void resizeEvent(QResizeEvent* event) override;
     virtual bool eventFilter(QObject* watched, QEvent* event) override;
     virtual QMenu* createPopupMenu() override;
 };

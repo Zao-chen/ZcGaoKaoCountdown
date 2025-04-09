@@ -9,6 +9,7 @@
 #include <QNetworkAccessManager>
 
 #include "ElaWidget.h"
+#include "ElaMenu.h"
 
 class ElaLineEdit;
 
@@ -29,27 +30,23 @@ public:
 private slots:
     void on_showMainAction();
     void on_showGithubAction();
-    void on_exitAppAction();    void createMenu();
+    void on_exitAppAction();
+    void createMenu();
     void hideWindow();
-
     void on_pushButton_clicked();
-
     void on_pushButton_2_clicked();
 
-    void on_timer_timeout(); //定时中断处理的槽函数
 private:
     Ui::Widget *ui;
     QSystemTrayIcon *m_sysTrayIcon; //系统托盘
     void initSysTrayIcon();
     void printText();
-    QMenu *m_menu;                  //菜单
+    ElaMenu *m_menu;                  //菜单
     QAction *m_showGithubAction;      //动作
     QAction *m_showMainAction;      //动作
     QAction *m_exitAppAction;       //动作
     void createActions();
     QNetworkAccessManager *m_manager;
-    QTimer * fTimer; //定时器
-    QTime fTimeCounter;//计时器
 
 protected:
     void closeEvent (QCloseEvent *event) override;
